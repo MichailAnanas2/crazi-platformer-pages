@@ -1,0 +1,22 @@
+Generated with myskill (local ACE-Step):
+
+galactic_theme_a.mp3
+http://127.0.0.1:8001/v1/audio?path=C%3A%5Cace-step%5CACE-Step-1.5%5C.cache%5Cacestep%5Ctmp%5Capi_audio%5C5c384e5f-1cdf-e432-58b8-2e9227b0175e.mp3
+
+galactic_theme_b.mp3
+http://127.0.0.1:8001/v1/audio?path=C%3A%5Cace-step%5CACE-Step-1.5%5C.cache%5Cacestep%5Ctmp%5Capi_audio%5C5d7c6eca-0460-4eaa-1a7f-872ba6ee4b6d.mp3
+
+galactic_theme_c.mp3
+http://127.0.0.1:8001/v1/audio?path=C%3A%5Cace-step%5CACE-Step-1.5%5C.cache%5Cacestep%5Ctmp%5Capi_audio%5C5b6b05c0-8230-9732-8b3c-33bd94862239.mp3
+
+taunt_dark_male.mp3
+http://127.0.0.1:8001/v1/audio?path=C%3A%5Cace-step%5CACE-Step-1.5%5C.cache%5Cacestep%5Ctmp%5Capi_audio%5Ce5a29878-7048-0482-b747-40c7a5b5522d.mp3
+
+taunt_robotic.mp3
+http://127.0.0.1:8001/v1/audio?path=C%3A%5Cace-step%5CACE-Step-1.5%5C.cache%5Cacestep%5Ctmp%5Capi_audio%5C2eddc4f6-1223-11a0-9475-c73bafcc3965.mp3
+
+taunt_female_whisper.mp3
+http://127.0.0.1:8001/v1/audio?path=C%3A%5Cace-step%5CACE-Step-1.5%5C.cache%5Cacestep%5Ctmp%5Capi_audio%5C847b052b-121c-a673-17e6-76aa140a87ea.mp3
+
+taunt_choir.mp3
+http://127.0.0.1:8001/v1/audio?path=C%3A%5Cace-step%5CACE-Step-1.5%5C.cache%5Cacestep%5Ctmp%5Capi_audio%5C5b568204-b009-c500-bcec-7b89dfc4d1e4.mp3
