@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0" />
 <title>Galactic Trial</title>
 <script>
-(()=>{const V='20260209c';const K='gt-cache-bust';const u=new URL(location.href);if('serviceWorker'in navigator)navigator.serviceWorker.getRegistrations().then(r=>r.forEach(x=>x.unregister())).catch(()=>{});if('caches'in window)caches.keys().then(k=>Promise.all(k.map(n=>caches.delete(n)))).catch(()=>{});if(u.searchParams.get('v')!==V&&sessionStorage.getItem(K)!==V){sessionStorage.setItem(K,V);u.searchParams.set('v',V);location.replace(u.toString())}})();
+(()=>{const V='20260210a';const K='gt-cache-bust';const u=new URL(location.href);if('serviceWorker'in navigator)navigator.serviceWorker.getRegistrations().then(r=>r.forEach(x=>x.unregister())).catch(()=>{});if('caches'in window)caches.keys().then(k=>Promise.all(k.map(n=>caches.delete(n)))).catch(()=>{});if(u.searchParams.get('v')!==V&&sessionStorage.getItem(K)!==V){sessionStorage.setItem(K,V);u.searchParams.set('v',V);location.replace(u.toString())}})();
 </script>
 <style>
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;touch-action:none;background:#060b12;color:#f0f6ff;font-family:Trebuchet MS,Segoe UI,sans-serif}
@@ -35,7 +35,6 @@
 <canvas id="game"></canvas>
 <div id="controls"><div class="pad"><button id="l" class="b">◀</button><button id="r" class="b">▶</button></div><div class="pad"><button id="j" class="b">J</button><button id="d" class="b">D</button></div></div>
 <div id="win"><div><h2>Все 10 уровней пройдены</h2><p id="res"></p><button id="retry" class="b" style="width:190px;height:56px;font-size:16px">Еще раз</button></div></div>
-<script src="assets/music/music-inline.js?v=20260209c"></script>
 <script>
 const cv=document.getElementById('game'),cx=cv.getContext('2d',{alpha:false});
 const levelEl=document.getElementById('level'),deathsEl=document.getElementById('deaths'),timeEl=document.getElementById('time'),msgEl=document.getElementById('msg');
@@ -69,7 +68,7 @@ function buildSky(){const w=innerWidth,h=innerHeight;bg.width=Math.floor(w*dpr);
 function resize(){dpr=Math.min(devicePixelRatio||1,1.25);cv.width=Math.floor(innerWidth*dpr);cv.height=Math.floor(innerHeight*dpr);cx.setTransform(dpr,0,0,dpr,0,0);if(cur)buildSky()}
 function levelGen(i){
 const r=rng(3001+i*177);const width=4400+i*520;const start={x:120,y:920};
-const platforms=[{x:0,y:1060,w:560,h:220,type:'solid',oneWay:false}];
+const platforms=[{x:0,y:1060,w:560,h:220,type:'solid'}];
 let prev=platforms[0],cursor=prev.x+prev.w;
 const segments=16+i*2;
 const easy=i<3,hard=i>6;
@@ -81,16 +80,16 @@ const gapMin=n<3?(easy?96:108):(easy?116:hard?138:126),gapMax=n<3?(easy?148:170)
 const w=128+Math.floor(r()*82),x=cursor+gap;
 let y=prev.y+Math.floor((r()-.5)*(easy?122:hard?168:150));y=cl(y,prev.y+riseMin,prev.y+riseMax);y=cl(y,340,980);
 const t=((n+i)%crumbleStep===0&&n>3)?'crumble':'solid';
-const p={x,y,w,h:22,type:t,timer:0,gone:false,restore:0,oneWay:true};
+const p={x,y,w,h:22,type:t,timer:0,gone:false,restore:0};
 platforms.push(p);prev=p;cursor=x+w;
 }
 let last=prev;
 if(width-760>last.x+last.w+120){
-const bridge={x:width-760,y:cl(last.y-(28+Math.floor(r()*34)),300,860),w:220,h:22,type:'solid',oneWay:true};
+const bridge={x:width-760,y:cl(last.y-(28+Math.floor(r()*34)),300,860),w:220,h:22,type:'solid'};
 platforms.push(bridge);last=bridge;
 }
 const finalY=Math.max(220,last.y-(20+Math.floor(r()*28)));
-const finalPlatform={x:width-410,y:finalY,w:350,h:24,type:'solid',oneWay:false};platforms.push(finalPlatform);
+const finalPlatform={x:width-410,y:finalY,w:350,h:24,type:'solid'};platforms.push(finalPlatform);
 const goal={x:finalPlatform.x+finalPlatform.w-86,y:finalPlatform.y-84,w:64,h:84};
 
 const spikes=[];
@@ -118,40 +117,13 @@ addEventListener('keyup',e=>keys.delete(e.code));addEventListener('resize',resiz
 let actx=null,aReady=false,musicOn=false,musicIdx=0,musicEl=new Audio(),musicGain=null,musicEnabled=true;
 const musicTracks=['assets/music/track1.mp3','assets/music/track2.mp3','assets/music/track3.mp3','assets/music/track4.mp3','assets/music/track5.mp3'];
 const tauntFiles=['assets/sfx/taunt1.mp3','assets/sfx/taunt2.mp3','assets/sfx/taunt3.mp3','assets/sfx/taunt4.mp3','assets/sfx/taunt5.mp3'];
-const tauntClips=tauntFiles.map(src=>{const a=new Audio(src);a.preload='auto';a.volume=0.95;return a});
+const tauntClips=tauntFiles.map((src)=>{const a=new Audio(src);a.preload='auto';a.volume=0.95;return a});
 const musicBtn=document.getElementById('musicBtn');
 function syncMusicBtn(){musicBtn.textContent='МУЗЫКА: '+(musicEnabled?'ВКЛ':'ВЫКЛ');musicBtn.classList.toggle('off',!musicEnabled)}
 function stopMusic(){musicOn=false;musicEl.pause();musicEl.currentTime=0;if(musicGain){try{musicGain.disconnect()}catch{}musicGain=null}}
-function startSynthMusic(){
-// Fallback if files fail
-if(!actx||!musicEnabled||musicOn)return;musicOn=true;const g=actx.createGain();g.gain.value=.022;g.connect(actx.destination);musicGain=g;const t=actx.currentTime;const mk=(f,ty)=>{const o=actx.createOscillator();o.type=ty;o.frequency.setValueAtTime(f,t);o.connect(g);o.start();return o};const a=mk(164.81,'triangle'),b=mk(246.94,'sine'),c=mk(329.63,'triangle');const l=actx.createOscillator(),lg=actx.createGain();l.frequency.value=.25;lg.gain.value=14;l.connect(lg);lg.connect(a.frequency);l.start()}
-function playNextTrack(){
-if(!musicEnabled)return;
-musicOn=true;
-musicEl.src=musicTracks[musicIdx%musicTracks.length];
-musicEl.volume=0.45;
-musicEl.preload='auto';
-musicEl.loop=false;
-const p=musicEl.play();
-if(p&&p.catch){
-p.catch(e=>{
-console.warn('Music play failed:',e);
-musicOn=false;
-// Retry once or fallback
-setTimeout(()=>{if(musicEnabled&&!musicOn)startSynthMusic()},2000);
-});
-}
-musicEl.onended=()=>{
-if(!musicEnabled)return;
-musicIdx++;
-playNextTrack();
-};
-}
-function startMusic(){
-if(!musicEnabled||musicOn)return;
-if(musicTracks.length){playNextTrack();return}
-startSynthMusic();
-}
+function startSynthMusic(){if(!actx||!musicEnabled||musicOn)return;musicOn=true;const g=actx.createGain();g.gain.value=.06;g.connect(actx.destination);musicGain=g;const t=actx.currentTime;const mk=(f,ty)=>{const o=actx.createOscillator();o.type=ty;o.frequency.setValueAtTime(f,t);o.connect(g);o.start();return o};const a=mk(164.81,'triangle'),b=mk(246.94,'sine'),c=mk(329.63,'triangle');const l=actx.createOscillator(),lg=actx.createGain();l.frequency.value=.25;lg.gain.value=14;l.connect(lg);lg.connect(a.frequency);l.start()}
+function playCurrentTrack(){if(!musicTracks.length)return Promise.reject(new Error('No tracks'));musicEl.src=musicTracks[musicIdx%musicTracks.length];musicEl.currentTime=0;musicEl.volume=0.8;musicEl.preload='auto';musicEl.loop=false;musicEl.muted=false;musicEl.setAttribute('playsinline','');musicEl.load();const p=musicEl.play();if(p&&p.catch)p.catch(()=>{musicOn=false;showMsg('Трек не запустился, включен резервный фон',1600);startSynthMusic()});return p||Promise.resolve()}
+function startMusic(){if(!musicEnabled||musicOn)return;musicOn=true;playCurrentTrack();musicEl.onended=()=>{if(!musicEnabled)return;musicIdx=(musicIdx+1)%musicTracks.length;playCurrentTrack()}}
 function audioOn(){if(!actx){const C=window.AudioContext||window.webkitAudioContext;if(!C)return;actx=new C()}if(actx.state==='suspended')actx.resume();aReady=true;startMusic()}
 musicBtn.onclick=()=>{audioOn();musicEnabled=!musicEnabled;if(!musicEnabled)stopMusic();else startMusic();syncMusicBtn()};syncMusicBtn();
 function sfx(t){if(!actx||!aReady)return;const n=actx.currentTime,o=actx.createOscillator(),g=actx.createGain();o.connect(g);g.connect(actx.destination);if(t==='jump'){o.type='triangle';o.frequency.setValueAtTime(280,n);o.frequency.exponentialRampToValueAtTime(520,n+.09);g.gain.setValueAtTime(.0001,n);g.gain.exponentialRampToValueAtTime(.05,n+.01);g.gain.exponentialRampToValueAtTime(.0001,n+.11);o.start(n);o.stop(n+.12);return}if(t==='dash'){o.type='sawtooth';o.frequency.setValueAtTime(145,n);o.frequency.exponentialRampToValueAtTime(92,n+.12);g.gain.setValueAtTime(.0001,n);g.gain.exponentialRampToValueAtTime(.07,n+.01);g.gain.exponentialRampToValueAtTime(.0001,n+.14);o.start(n);o.stop(n+.15);return}if(t==='death'){o.type='square';o.frequency.setValueAtTime(180,n);o.frequency.exponentialRampToValueAtTime(58,n+.3);g.gain.setValueAtTime(.0001,n);g.gain.exponentialRampToValueAtTime(.07,n+.01);g.gain.exponentialRampToValueAtTime(.0001,n+.32);o.start(n);o.stop(n+.33);return}o.type='triangle';o.frequency.setValueAtTime(330,n);o.frequency.exponentialRampToValueAtTime(660,n+.22);g.gain.setValueAtTime(.0001,n);g.gain.exponentialRampToValueAtTime(.06,n+.02);g.gain.exponentialRampToValueAtTime(.0001,n+.28);o.start(n);o.stop(n+.29)}
@@ -168,7 +140,7 @@ const m=(right?1:0)-(left?1:0);if(m)p.f=m;if(inp.j)p.jb=ph.jbt;if(inp.d&&p.dc<=0
 if(p.ds>0){p.ds-=dt;p.vx=p.dd*ph.dh;p.vy=0}else{const tgt=m*ph.spd;if(m){const dir=Math.sign(tgt-p.vx);p.vx+=dir*ph.acc*dt;if((dir>0&&p.vx>tgt)||(dir<0&&p.vx<tgt))p.vx=tgt}else{const f=Math.sign(p.vx),a=ph.fr*dt;p.vx=Math.abs(p.vx)<=a?0:p.vx-f*a}p.vy=Math.min(p.vy+ph.gr*dt,ph.mf)}
 if(p.jb>0&&(p.g||p.c>0)){sfx('jump');p.vy=-ph.j;p.g=false;p.c=0;p.jb=0}
 const sld=solid();p.x+=p.vx*dt;for(const t of sld){if(!hit(p,t))continue;if(p.vx>0)p.x=t.x-p.w;else if(p.vx<0)p.x=t.x+t.w;p.vx=0}
-p.y+=p.vy*dt;p.g=false;for(const t of sld){if(!hit(p,t))continue;if(p.vy>0){if(t.oneWay&&p.y+p.h-p.vy*dt>t.y+10)continue;p.y=t.y-p.h;p.vy=0;p.g=true;p.c=ph.ct;if(t.type==='crumble'){t.timer+=dt;if(t.timer>.28){t.gone=true;t.restore=2.4}}}else if(p.vy<0){if(t.oneWay)continue;p.y=t.y+t.h;p.vy=0}}
+p.y+=p.vy*dt;p.g=false;for(const t of sld){if(!hit(p,t))continue;if(p.vy>0){p.y=t.y-p.h;p.vy=0;p.g=true;p.c=ph.ct;if(t.type==='crumble'){t.timer+=dt;if(t.timer>.28){t.gone=true;t.restore=2.4}}}else if(p.vy<0){p.y=t.y+t.h;p.vy=0}}
 if(!p.g)for(const t of cur.platforms)if(t.type==='crumble')t.timer=0;p.x=cl(p.x,0,cur.width-p.w);
 if(!cheat){for(const s of cur.spikes)if(hit(p,s))return die();for(const s of cur.saws){const tt=et*s.sp+s.ph,x=s.cx+(s.a==='x'?Math.sin(tt)*s.amp:0),y=s.cy+(s.a==='y'?Math.sin(tt)*s.amp:0);if(chr(x,y,s.r,p))return die()}for(const l of cur.lasers){if(((et+l.ph)%l.per)<l.on&&hit(p,l))return die()}}
 if(p.y>cur.height+120)return die();if(hit(p,cur.goal)){if(level<LEVELS-1){level++;loadLevel(level,true);return}else{done=true;sfx('win');win.style.display='grid';res.textContent='Смерти: '+deaths+' | Время: '+((performance.now()-start)/1000).toFixed(2)+'с'}}}
