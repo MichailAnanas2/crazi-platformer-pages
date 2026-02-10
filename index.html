@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0" />
 <title>Galactic Trial</title>
 <script>
-(()=>{const V='20260209c';const K='gt-cache-bust';const u=new URL(location.href);if('serviceWorker'in navigator)navigator.serviceWorker.getRegistrations().then(r=>r.forEach(x=>x.unregister())).catch(()=>{});if('caches'in window)caches.keys().then(k=>Promise.all(k.map(n=>caches.delete(n)))).catch(()=>{});if(u.searchParams.get('v')!==V&&sessionStorage.getItem(K)!==V){sessionStorage.setItem(K,V);u.searchParams.set('v',V);location.replace(u.toString())}})();
+(()=>{const V='20260210a';const K='gt-cache-bust';const u=new URL(location.href);if('serviceWorker'in navigator)navigator.serviceWorker.getRegistrations().then(r=>r.forEach(x=>x.unregister())).catch(()=>{});if('caches'in window)caches.keys().then(k=>Promise.all(k.map(n=>caches.delete(n)))).catch(()=>{});if(u.searchParams.get('v')!==V&&sessionStorage.getItem(K)!==V){sessionStorage.setItem(K,V);u.searchParams.set('v',V);location.replace(u.toString())}})();
 </script>
 <style>
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;touch-action:none;background:#060b12;color:#f0f6ff;font-family:Trebuchet MS,Segoe UI,sans-serif}
@@ -35,7 +35,6 @@
 <canvas id="game"></canvas>
 <div id="controls"><div class="pad"><button id="l" class="b">◀</button><button id="r" class="b">▶</button></div><div class="pad"><button id="j" class="b">J</button><button id="d" class="b">D</button></div></div>
 <div id="win"><div><h2>Все 10 уровней пройдены</h2><p id="res"></p><button id="retry" class="b" style="width:190px;height:56px;font-size:16px">Еще раз</button></div></div>
-<script src="assets/music/music-inline.js?v=20260209c"></script>
 <script>
 const cv=document.getElementById('game'),cx=cv.getContext('2d',{alpha:false});
 const levelEl=document.getElementById('level'),deathsEl=document.getElementById('deaths'),timeEl=document.getElementById('time'),msgEl=document.getElementById('msg');
@@ -116,17 +115,15 @@ bind('l',()=>inp.l=true,()=>inp.l=false);bind('r',()=>inp.r=true,()=>inp.r=false
 addEventListener('keydown',e=>{audioOn();keys.add(e.code);if(['ArrowUp','Space','KeyW'].includes(e.code))inp.j=true;if(['ShiftLeft','ShiftRight','KeyK'].includes(e.code))inp.d=true});
 addEventListener('keyup',e=>keys.delete(e.code));addEventListener('resize',resize);document.getElementById('retry').onclick=resetAll;
 let actx=null,aReady=false,musicOn=false,musicIdx=0,musicEl=new Audio(),musicGain=null,musicEnabled=true;
-const configuredTracks=(window.MY_MUSIC&&Array.isArray(window.MY_MUSIC.tracks))?window.MY_MUSIC.tracks:[];
-const configuredTaunts=(window.MY_MUSIC&&Array.isArray(window.MY_MUSIC.taunts))?window.MY_MUSIC.taunts:[];
-const skillbossTracks=configuredTracks;
-const tauntClips=configuredTaunts.map((src)=>new Audio(src));
-for(const a of tauntClips){a.preload='auto';a.volume=0.92}
+const musicTracks=['assets/music/track1.mp3','assets/music/track2.mp3','assets/music/track3.mp3','assets/music/track4.mp3','assets/music/track5.mp3'];
+const tauntFiles=['assets/sfx/taunt1.mp3','assets/sfx/taunt2.mp3','assets/sfx/taunt3.mp3','assets/sfx/taunt4.mp3','assets/sfx/taunt5.mp3'];
+const tauntClips=tauntFiles.map((src)=>{const a=new Audio(src);a.preload='auto';a.volume=0.95;return a});
 const musicBtn=document.getElementById('musicBtn');
 function syncMusicBtn(){musicBtn.textContent='МУЗЫКА: '+(musicEnabled?'ВКЛ':'ВЫКЛ');musicBtn.classList.toggle('off',!musicEnabled)}
 function stopMusic(){musicOn=false;musicEl.pause();musicEl.currentTime=0;if(musicGain){try{musicGain.disconnect()}catch{}musicGain=null}}
-function startSynthMusic(){if(!actx||!musicEnabled||musicOn)return;musicOn=true;const g=actx.createGain();g.gain.value=.022;g.connect(actx.destination);musicGain=g;const t=actx.currentTime;const mk=(f,ty)=>{const o=actx.createOscillator();o.type=ty;o.frequency.setValueAtTime(f,t);o.connect(g);o.start();return o};const a=mk(164.81,'triangle'),b=mk(246.94,'sine'),c=mk(329.63,'triangle');const l=actx.createOscillator(),lg=actx.createGain();l.frequency.value=.25;lg.gain.value=14;l.connect(lg);lg.connect(a.frequency);l.start()}
-function playCurrentTrack(){musicEl.src=skillbossTracks[musicIdx%skillbossTracks.length];musicEl.currentTime=0;musicEl.load();const p=musicEl.play();if(p&&p.catch)p.catch(()=>{musicOn=false;setTimeout(()=>{if(!musicEnabled||musicOn)return;musicOn=true;const retry=musicEl.play();if(retry&&retry.catch)retry.catch(()=>{musicOn=false;showMsg('Нажми МУЗЫКА для запуска трека',1800)})},180)});return p}
-function startMusic(){if(!musicEnabled||musicOn)return;if(skillbossTracks.length){musicOn=true;musicEl.volume=0.42;musicEl.preload='auto';musicEl.loop=false;musicEl.playsInline=true;playCurrentTrack();musicEl.onended=()=>{if(!musicEnabled)return;musicIdx++;playCurrentTrack()};return}startSynthMusic()}
+function startSynthMusic(){if(!actx||!musicEnabled||musicOn)return;musicOn=true;const g=actx.createGain();g.gain.value=.06;g.connect(actx.destination);musicGain=g;const t=actx.currentTime;const mk=(f,ty)=>{const o=actx.createOscillator();o.type=ty;o.frequency.setValueAtTime(f,t);o.connect(g);o.start();return o};const a=mk(164.81,'triangle'),b=mk(246.94,'sine'),c=mk(329.63,'triangle');const l=actx.createOscillator(),lg=actx.createGain();l.frequency.value=.25;lg.gain.value=14;l.connect(lg);lg.connect(a.frequency);l.start()}
+function playCurrentTrack(){if(!musicTracks.length)return Promise.reject(new Error('No tracks'));musicEl.src=musicTracks[musicIdx%musicTracks.length];musicEl.currentTime=0;musicEl.volume=0.8;musicEl.preload='auto';musicEl.loop=false;musicEl.muted=false;musicEl.setAttribute('playsinline','');musicEl.load();const p=musicEl.play();if(p&&p.catch)p.catch(()=>{musicOn=false;showMsg('Трек не запустился, включен резервный фон',1600);startSynthMusic()});return p||Promise.resolve()}
+function startMusic(){if(!musicEnabled||musicOn)return;musicOn=true;playCurrentTrack();musicEl.onended=()=>{if(!musicEnabled)return;musicIdx=(musicIdx+1)%musicTracks.length;playCurrentTrack()}}
 function audioOn(){if(!actx){const C=window.AudioContext||window.webkitAudioContext;if(!C)return;actx=new C()}if(actx.state==='suspended')actx.resume();aReady=true;startMusic()}
 musicBtn.onclick=()=>{audioOn();musicEnabled=!musicEnabled;if(!musicEnabled)stopMusic();else startMusic();syncMusicBtn()};syncMusicBtn();
 function sfx(t){if(!actx||!aReady)return;const n=actx.currentTime,o=actx.createOscillator(),g=actx.createGain();o.connect(g);g.connect(actx.destination);if(t==='jump'){o.type='triangle';o.frequency.setValueAtTime(280,n);o.frequency.exponentialRampToValueAtTime(520,n+.09);g.gain.setValueAtTime(.0001,n);g.gain.exponentialRampToValueAtTime(.05,n+.01);g.gain.exponentialRampToValueAtTime(.0001,n+.11);o.start(n);o.stop(n+.12);return}if(t==='dash'){o.type='sawtooth';o.frequency.setValueAtTime(145,n);o.frequency.exponentialRampToValueAtTime(92,n+.12);g.gain.setValueAtTime(.0001,n);g.gain.exponentialRampToValueAtTime(.07,n+.01);g.gain.exponentialRampToValueAtTime(.0001,n+.14);o.start(n);o.stop(n+.15);return}if(t==='death'){o.type='square';o.frequency.setValueAtTime(180,n);o.frequency.exponentialRampToValueAtTime(58,n+.3);g.gain.setValueAtTime(.0001,n);g.gain.exponentialRampToValueAtTime(.07,n+.01);g.gain.exponentialRampToValueAtTime(.0001,n+.32);o.start(n);o.stop(n+.33);return}o.type='triangle';o.frequency.setValueAtTime(330,n);o.frequency.exponentialRampToValueAtTime(660,n+.22);g.gain.setValueAtTime(.0001,n);g.gain.exponentialRampToValueAtTime(.06,n+.02);g.gain.exponentialRampToValueAtTime(.0001,n+.28);o.start(n);o.stop(n+.29)}
